@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="container">
+        <div class="page-header">
+            <h1>Pathway mapping</h1>
+        </div>
+        <div>
+            <h3>Select dataset IDs</h3>
+            Enter up to three groups of datasets. Each group should be a list of dataset names (newline separated)
+            <div>
+                <h4>Group 1</h4>
+                <p>name: <input name="group_1_name" type="text" value="group1"></p>
+                <p>dataset names: <textarea name="group_1_ds_names" type="text" value="" style="height:120px;width:120px;overflow:auto;"></textarea></p>
+            </div>
+            <div>
+                <h4>Group 2</h4>
+                <p>name: <input name="group_2_name" type="text" value="group2"></p>
+                <p>dataset names: <textarea name="group_2_ds_names" type="text" value="" style="height:120px;width:120px;overflow:auto;"></textarea></p>
+            </div>
+            <div>
+                <h4>Group 3</h4>
+                <p>name: <input name="group_3_name" type="text" value="group3"></p>
+                <p>dataset names: <textarea name="group_3_ds_names" type="text" value="" style="height:120px;width:120px;overflow:auto;"></textarea></p>
+            </div>
+
+        </div>
+        <button id="button-send" type="button" onclick=getPathwayMap()>get pathway image</button>
+        <button id="button-send" type="button" onclick=getPathwayIli()>get ili mapping</button>
+        <p>
+            <button id="set-example" type="button" onclick=setExample()>see example</button>
+
+    </div>
+    <script type="text/javascript">
+        function getPathwayIli(){
+            var map_id = 'main';
+            var href_str = ["/pathway/" + map_id + "/ili/",
+                            "?group_1_name=",$('input[name=group_1_name]').val(),
+                            "&group_2_name=",$('input[name=group_2_name]').val(),
+                            "&group_3_name=",$('input[name=group_3_name]').val(),
+                            "&group_1_ds_names=", $('textarea[name=group_1_ds_names]').val().replace(/\r?\n/g, "|"),
+                            "&group_2_ds_names=", $('textarea[name=group_2_ds_names]').val().replace(/\r?\n/g, "|"),
+                            "&group_3_ds_names=", $('textarea[name=group_3_ds_names]').val().replace(/\r?\n/g, "|"),
+                            ].join(separator="")
+            console.debug(href_str);
+            window.location.href = href_str
+
+        }
+        function getPathwayMap(){
+            var map_id = 'main';
+            var href_str = "/pathway/" + map_id + "/im/"
+            window.location.href=href_str
+        }
+
+        function setExample(){
+            var g1n = "MTBLS289";
+            var g1 = "ICL//A14_10cm_S3\nICL//A14_5cm_S3\nICL//A14_CT_S2\nICL//A15_10cm_S3\nICL//A15_centre_S5";
+            $('input[name=group_1_name]').val(g1n);
+            $('textarea[name=group_1_ds_names]').val(g1);
+            var g2n = "MTBLS273";
+            var g2 = "ICL//BRB01C\nICL//BRB01E\nICL//BRB01N\nICL//BRB01S\nICL//BRB01W\nICL//BRB03N\nICL//BRB03S\nICL//BRB03W1\nICL//BRB03W2";
+            $('input[name=group_2_name]').val(g2n);
+            $('textarea[name=group_2_ds_names]').val(g2);
+        }
+    </script>
+{% endblock %}
