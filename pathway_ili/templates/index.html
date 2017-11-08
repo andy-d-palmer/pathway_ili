@@ -22,7 +22,10 @@
                 <p>name: <input name="group_3_name" type="text" value="group3"></p>
                 <p>dataset names: <textarea name="group_3_ds_names" type="text" value="" style="height:120px;width:120px;overflow:auto;"></textarea></p>
             </div>
-
+        <select id="pathwaySelect">
+            <option value="map01100">Metabolic pathways - Reference pathway</option>
+            <option value="map00590">Arachidonic acid metabolism - Reference pathway</option>
+        </select>
         </div>
         <button id="button-send" type="button" onclick=getPathwayMap()>get pathway image</button>
         <button id="button-send" type="button" onclick=getPathwayIli()>get ili mapping</button>
@@ -31,8 +34,12 @@
 
     </div>
     <script type="text/javascript">
+        function getMapId(){
+            var map_id = $("#pathwaySelect").val()
+            return map_id
+        }
         function getPathwayIli(){
-            var map_id = 'main';
+            var map_id = getMapId()
             var href_str = ["/pathway/" + map_id + "/ili/",
                             "?group_1_name=",$('input[name=group_1_name]').val(),
                             "&group_2_name=",$('input[name=group_2_name]').val(),
@@ -46,14 +53,14 @@
 
         }
         function getPathwayMap(){
-            var map_id = 'main';
+            var map_id = getMapId()
             var href_str = "/pathway/" + map_id + "/im/"
             window.location.href=href_str
         }
 
         function setExample(){
             var g1n = "MTBLS289";
-            var g1 = "ICL//A14_10cm_S3\nICL//A14_5cm_S3\nICL//A14_CT_S2\nICL//A15_10cm_S3\nICL//A15_centre_S5";
+            var g1 = "ICL//A64 CT S2-centroid\nICL//A14 CT S2-centroid\nICL//A43 CT S5-centroid\nICL//A55 CT S3-centroid\nICL//A51 5cm S3-centroid\nICL//A43 CT S4-centroid\nICL//A43 10cm S8-centroid\nICL//A50 jcn S8-centroid\nICL//A44 junction S6-centroid";
             $('input[name=group_1_name]').val(g1n);
             $('textarea[name=group_1_ds_names]').val(g1);
             var g2n = "MTBLS273";
