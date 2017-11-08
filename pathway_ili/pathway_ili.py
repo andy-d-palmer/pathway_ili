@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, send_file
 
-from .utils import generate_ili_csv
+from .utils import generate_ili_csv, get_map_filename
 
 app = Flask(__name__)
 
@@ -10,7 +10,7 @@ def index():
 
 
 @app.route('/pathway/<map_id>/ili/')
-def get_ili_map(map_id=0):
+def get_ili_map(map_id):
     group_1_name = request.args.get('group_1_name', 'group1', type=str)
     group_2_name = request.args.get('group_2_name', 'group2', type=str)
     group_3_name = request.args.get('group_3_name', 'group3', type=str)
@@ -25,22 +25,20 @@ def get_ili_map(map_id=0):
     for gn, g in zip([group_1_name, group_2_name, group_3_name], [group_1_ds_names, group_2_ds_names, group_3_ds_names]):
         if not g == '':
             groups[gn] = g.split("|")
-    ili_csv = generate_ili_csv(groups)
+    ili_csv = generate_ili_csv(groups, map_id)
 
-    #response = make_response(ili_csv)
-    #response.headers["Content-Disposition"] = "attachment; filename={}.header.imzml".format('ili_csv')
-    #return response
     return send_file(ili_csv,
                      mimetype='text/csv',
-                 attachment_filename="ili_csv.csv",
-                 as_attachment=True)
+                     attachment_filename="ili_{}.csv".format(map_id),
+                     as_attachment=True
+                     )
 
 @app.route('/pathway/<map_id>/im/')
-def get_map(map_id=0):
-    filename = '/media/embl/palmer/tmp/KEGG_EC_metabolitemap_bw.png'
+def get_map(map_id):
+    filename = get_map_filename(map_id)
     return send_file(filename,
                      mimetype='image/png',
-                     attachment_filename="pathway_map.png",
+                     attachment_filename="{}.png".format(map_id),
                     as_attachment=True)
 
 if __name__ == '__main__':
